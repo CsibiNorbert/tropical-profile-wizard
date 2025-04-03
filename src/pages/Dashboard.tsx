@@ -1,12 +1,88 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Palmtree, MapPin, Compass, MessageSquare, Calendar, Users, Navigation } from "lucide-react";
+import { MapPin, Compass, MessageSquare, Calendar, Users, Navigation } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MobileNavbar from "@/components/layout/MobileNavbar";
+import { useState, useEffect } from "react";
+import { Trip, TravelerProfile } from "@/types/traveler";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+
+// Mock data for upcoming trips
+const mockUpcomingTrips: Trip[] = [
+  {
+    id: "1",
+    userId: "current-user",
+    destination: "Bali, Indonesia",
+    startDate: "2025-05-10",
+    endDate: "2025-05-20",
+    activities: [],
+    sharedWith: []
+  },
+  {
+    id: "2",
+    userId: "current-user",
+    destination: "Bangkok, Thailand",
+    startDate: "2025-06-15",
+    endDate: "2025-06-22",
+    activities: [],
+    sharedWith: []
+  }
+];
+
+// Mock data for potential matches
+const mockPotentialMatches: TravelerProfile[] = [
+  {
+    id: "101",
+    name: "Emma W.",
+    age: 28,
+    gender: "Female",
+    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=120&auto=format&fit=crop",
+    bio: "Adventure seeker, love exploring new cultures",
+    destination: "Bali, Indonesia",
+    startDate: "2025-05-12",
+    endDate: "2025-05-19",
+    interests: ["hiking", "photography", "local cuisine"],
+    languages: ["English", "Spanish"],
+    travelStyle: "adventure",
+    verified: true
+  },
+  {
+    id: "102",
+    name: "Michael T.",
+    age: 32,
+    gender: "Male",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&auto=format&fit=crop",
+    bio: "Digital nomad exploring SE Asia",
+    destination: "Bangkok, Thailand",
+    startDate: "2025-06-17",
+    endDate: "2025-06-24",
+    interests: ["coworking", "street food", "nightlife"],
+    languages: ["English", "German"],
+    travelStyle: "culture",
+    verified: true
+  }
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [upcomingTrips, setUpcomingTrips] = useState<Trip[]>([]);
+  const [potentialMatches, setPotentialMatches] = useState<TravelerProfile[]>([]);
+  
+  useEffect(() => {
+    // In a real app, we would fetch the user's upcoming trips and potential matches here
+    // For now, we'll use our mock data
+    setUpcomingTrips(mockUpcomingTrips);
+    setPotentialMatches(mockPotentialMatches);
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-r from-tropical-turquoise/10 to-tropical-coral/10 pb-16">
@@ -16,6 +92,123 @@ const Dashboard = () => {
           <p className="text-gray-600 max-w-2xl mx-auto text-sm">
             Connect with fellow travelers, plan your adventures, and explore safely.
           </p>
+        </div>
+        
+        {/* Upcoming Trips Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Your Upcoming Trips</h2>
+            <Button 
+              onClick={() => navigate('/create-trip')}
+              className="bg-tropical-turquoise hover:bg-tropical-turquoise/90"
+              size="sm"
+            >
+              Create Trip
+            </Button>
+          </div>
+          
+          {upcomingTrips.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {upcomingTrips.map(trip => (
+                <Card 
+                  key={trip.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => navigate(`/trip/${trip.id}`)}
+                >
+                  <div className="p-4 flex items-center">
+                    <div className="p-3 rounded-full bg-tropical-turquoise/10 mr-3">
+                      <MapPin className="h-5 w-5 text-tropical-turquoise" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">{trip.destination}</h3>
+                      <p className="text-sm text-gray-600">
+                        {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="p-4 text-center">
+              <p className="text-gray-600 mb-4">You don't have any upcoming trips.</p>
+              <Button 
+                onClick={() => navigate('/create-trip')}
+                className="bg-tropical-turquoise hover:bg-tropical-turquoise/90"
+              >
+                Plan Your First Adventure
+              </Button>
+            </Card>
+          )}
+        </div>
+        
+        {/* Potential Travel Companions Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Potential Travel Companions</h2>
+            <Button 
+              onClick={() => navigate('/travel-companions')}
+              className="bg-tropical-coral hover:bg-tropical-coral/90"
+              size="sm"
+            >
+              View All
+            </Button>
+          </div>
+          
+          {potentialMatches.length > 0 ? (
+            <Card className="overflow-hidden">
+              <Table>
+                <TableBody>
+                  {potentialMatches.map(match => (
+                    <TableRow 
+                      key={match.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => navigate(`/chat/${match.id}`)}
+                    >
+                      <TableCell className="py-2 pl-4">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded-full overflow-hidden mr-3">
+                            <img 
+                              src={match.photo} 
+                              alt={match.name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800">{match.name}, {match.age}</p>
+                            <p className="text-xs text-gray-600">{match.destination}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right pr-4">
+                        <p className="text-sm text-gray-600">
+                          {formatDate(match.startDate)} - {formatDate(match.endDate)}
+                        </p>
+                        <div className="flex items-center justify-end mt-1">
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">
+                            Trip Overlap
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          ) : (
+            <Card className="p-4 text-center">
+              <p className="text-gray-600">
+                No potential matches found for your upcoming trips.
+              </p>
+              <Button 
+                variant="link" 
+                onClick={() => navigate('/travel-companions')}
+                className="text-tropical-coral"
+              >
+                Browse All Travelers
+              </Button>
+            </Card>
+          )}
         </div>
         
         <div className="grid grid-cols-2 gap-4">
