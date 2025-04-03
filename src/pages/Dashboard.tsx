@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PalmTree, MapPin, Compass } from "lucide-react";
+import { Palmtree, MapPin, Compass } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -22,7 +22,7 @@ const Dashboard = () => {
           <Card className="p-6 border-tropical-turquoise/20 hover:shadow-lg transition-shadow">
             <div className="flex flex-col items-center text-center">
               <div className="p-3 bg-tropical-turquoise/10 rounded-full mb-4">
-                <PalmTree className="h-8 w-8 text-tropical-turquoise" />
+                <Palmtree className="h-8 w-8 text-tropical-turquoise" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Discover Destinations</h3>
               <p className="text-gray-600 mb-4">
