@@ -40,10 +40,15 @@ const TravelCompanions = () => {
       // Filter by age range
       const ageMatch = traveler.age >= ageRange[0] && traveler.age <= ageRange[1];
       
-      // Filter by date - simplified for demo purposes
-      // In a real app, we would check for overlap between travel dates
-      const dateMatch = !dateRange[0] || !dateRange[1] || 
-        (traveler.startDate <= dateRange[1] && traveler.endDate >= dateRange[0]);
+      // Filter by date - convert string dates to Date objects for comparison
+      let dateMatch = true;
+      if (dateRange[0] && dateRange[1]) {
+        const travelerStartDate = new Date(traveler.startDate);
+        const travelerEndDate = new Date(traveler.endDate);
+        
+        // Check if date ranges overlap
+        dateMatch = travelerStartDate <= dateRange[1] && travelerEndDate >= dateRange[0];
+      }
       
       return destinationMatch && ageMatch && dateMatch;
     });
