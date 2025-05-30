@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Compass, MessageSquare, Calendar, Users, Navigation } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MobileNavbar from "@/components/layout/MobileNavbar";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { useState, useEffect } from "react";
 import { Trip, TravelerProfile } from "@/types/traveler";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -311,6 +312,7 @@ const Dashboard = () => {
         </div>
       </div>
       
+      <PWAInstallPrompt />
       <MobileNavbar />
     </div>
   );
